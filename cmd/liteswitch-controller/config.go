@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"liteswitch/handler"
+	"github.com/WesleyEvanMiller/Liteswitch/handler"
 )
 
 type nothing struct{}

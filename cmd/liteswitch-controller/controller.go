@@ -6,7 +6,7 @@ import (
 	"io"
 	"time"
 
-	"liteswitch/handler"
+	"github.com/WesleyEvanMiller/Liteswitch/handler"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"

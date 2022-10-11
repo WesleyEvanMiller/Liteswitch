@@ -1,8 +1,9 @@
-module liteswitch-controller
+module github.com/WesleyEvanMiller/Liteswitch
 
 go 1.19
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.0.0
 	github.com/stretchr/testify v1.8.0
 	k8s.io/api v0.25.0
 	k8s.io/client-go v0.25.0
@@ -11,7 +12,6 @@ require (
 )
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.0.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.0.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v0.5.1 // indirect
 	github.com/cilium/ebpf v0.7.0 // indirect
