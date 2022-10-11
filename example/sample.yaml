@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: liteswtich-sa
+  pod: kube-system
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: read-deployment
+rules:
+  - apiGroups: [""]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: liteswtich-sa-read-deployment
+subjects:
+- kind: ServiceAccount
+  name: liteswtich-sa
+  pod: kube-system
+roleRef:
+  kind: ClusterRole
+  name: read-deployment
+  apiGroup: rbac.authorization.k8s.io
+
+--- 
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: liteswitch-deployment-modify
+rules:
+  - apiGroups: [""]
+    resources: ["deployments"]
+    verbs: ["update", "create", "delete", "get"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: staticlb-staticlb-crb
+subjects:
+- kind: ServiceAccount
+  name: liteswtich-sa
+  pod: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: liteswitch-deployment-modify
+
+---
+apiVersion: v1
+metadata:
+  pod: kube-system
+  name: liteswitch-config
+data:
+  config.json: | 
+    {
+      "nsToOmit": {
+        "kube-public":     "",
+        "kube-system":     "",
+        "kube-node-lease": ""
+      },
+
+      "nodePoolLabel":{
+        "key": "test",
+        "value": "true"
+      },
+
+      "nodePoolStateHandlerEnabled": true
+    }
+kind: ConfigMap
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: liteswitch
+    pod: kube-system
+    labels:
+      apps: liteswitch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: liteswitch
+  template:
+    metadata:
+        labels:
+            app: liteswitch
+    spec:
+      serviceAccountName: liteswitch-sa
+      containers:
+      - name: static-lb
+        image: /wem/liteswitch:1.0.0
+        volumeMounts:
+        - name: config
+          mountPath: "/etc/liteswitch"
+          readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: liteswitch-config
+            items:
+              - key: "config.json"
+                path: "config.json"

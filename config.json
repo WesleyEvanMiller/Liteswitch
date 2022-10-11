@@ -1,0 +1,29 @@
+{
+  "nsToOmit": {
+    "kube-public":     "",
+		"kube-system":     "",
+		"kube-node-lease": ""
+  },
+
+  "nodePoolLabel":{
+    "key": "{label_you_want}",
+    "value": "{value_for_label}"
+  },
+
+  "nodePoolStateHandlerEnabled": true,
+
+  "cloudType": "{azure_cloud_type (AzureGovernment, AzureCloud, AzureChina)",
+  "cloudGroupID": "{azure_subscription_id}",
+
+  "cloudCredentials": {
+    "username": "{azure_client_id}",
+    "password": "{azure_client_secret}",
+    "tenant": "{azure_tenant_id}"
+  },
+
+  "nodePool": {
+    "name": "{nodepool_name}",
+    "cluster": "{cluster_name}",
+    "clusterResourceGroup": "{cluster_resource_group}"
+  }
+}
